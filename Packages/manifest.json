@@ -38,13 +38,5 @@
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
   },
-  "scopedRegistries": [
-    {
-      "name": "LonLatToUnity",
-      "url": "https://blog.csdn.net/atgczcl?type=blog",
-      "scopes": [
-        "com.atgc.geo"
-      ]
-    }
-  ]
+  "scopedRegistries": []
 }

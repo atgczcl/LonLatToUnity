@@ -11,7 +11,11 @@
       "latitude",
       "unity经纬度"
     ],
-    "author": "atgczcl",
+    "author": {
+        "name": "atgczcl",
+        "email": "atgczcl@163.com",
+        "url": "https://blog.csdn.net/atgczcl?type=blog"
+      },
     "dependencies": {
       
     }
