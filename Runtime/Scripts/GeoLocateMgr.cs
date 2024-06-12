@@ -17,7 +17,7 @@ namespace ATGC.GEO
         /// <summary>
         /// 缩放比例
         /// </summary>
-        public float Scale = 1;
+        public float Scale = 100;
 
         /// <summary>
         /// 所有LocaterObj的集合
@@ -57,6 +57,24 @@ namespace ATGC.GEO
                 obj.transform.position = new Vector3(scaledUnityPos.x, 0, scaledUnityPos.y);
             }
         }
+
+        /// <summary>
+        /// 通过string longitude,latitude 计算unity坐标
+        /// </summary>
+        /// <param name="lonLatStr"></param>
+        /// <returns></returns>
+        public Vector2 CalculateUnityPos(string lonLatStr)
+        {
+            //初始化GeoCoordinateModel
+            GeoCoordinateModel geoCoordinateModel = new GeoCoordinateModel(lonLatStr);
+            //中心点unity坐标
+            Vector2 centerUnityPos = new Vector2(CenterLocaterObj.transform.position.x, CenterLocaterObj.transform.position.z);
+            //计算缩放后的unity坐标
+            var scaledUnityPos = geoCoordinateModel.CalculateScaledUnityPos(centerUnityPos, Scale);
+            return scaledUnityPos;
+        }
+        
+
 
 
     }

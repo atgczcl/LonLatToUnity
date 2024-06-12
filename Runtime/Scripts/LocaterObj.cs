@@ -43,7 +43,7 @@ namespace ATGC.GEO
                     double.TryParse(strs[1], out latitude);
                 }
             }
-            m_GeoCoordinateModel = new GeoCoordinateModel(latitude, longitude);
+            m_GeoCoordinateModel = new GeoCoordinateModel(longitude, latitude);
         }
 
 
