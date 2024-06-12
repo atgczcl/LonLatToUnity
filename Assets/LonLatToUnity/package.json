@@ -1,7 +1,7 @@
 {
     "name": "com.atgc.lonlattounity",
     "displayName": "LonLatToUnity",
-    "version": "1.0.0", 
+    "version": "1.0.1", 
     "unity": "2024.6",
     "license": "MIT",
     "description": "LonLatToUnity 将经纬度坐标转换为Web墨卡托投影坐标,再转换为unity内某个位置的相对坐标（Convert the earth's longitude and latitude coordinates to unity coordinates）",
@@ -18,5 +18,12 @@
       },
     "dependencies": {
       
+    },
+    "samples": [
+    {
+      "displayName": "LocateTest",
+      "description": "定位测试 LocateTest",
+      "path": "Tests"
     }
+]
   }
