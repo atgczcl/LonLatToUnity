@@ -31,11 +31,28 @@ namespace ATGC.GEO
         public Vector2d calc_unitVector;
         public Vector2d calc_unityPos;
 
-        public GeoCoordinateModel(double lat, double lon)
+        public string LonLatStr { get; }
+
+        public GeoCoordinateModel(double lon, double lat)
         {
             latitude = lat;
             longitude = lon;
             CalculateWebMercatorPos();
+        }
+
+        public GeoCoordinateModel(string lonLatStr)
+        {
+            LonLatStr = lonLatStr;
+            if (!string.IsNullOrEmpty(LonLatStr))
+            {
+                //分解出经纬度
+                string[] strs = LonLatStr.Split(',');
+                if (strs.Length == 2)
+                {
+                    double.TryParse(strs[0], out longitude);
+                    double.TryParse(strs[1], out latitude);
+                }
+            }
         }
 
         /// <summary>
@@ -72,6 +89,7 @@ namespace ATGC.GEO
         /// <summary>
         /// 计算缩放后的unity坐标
         /// </summary>
+        /// <param name="centerUnityPos"> 中心点的unity坐标 x,z水平坐标</param>
         /// <param name="scale"></param>
         public Vector2 CalculateScaledUnityPos(Vector2 centerUnityPos, float scale)
         {
