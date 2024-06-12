@@ -22,6 +22,16 @@ namespace Mapbox.Unity.Utilities
 		}
 
 		/// <summary>
+		/// Vector2 convenience method to convert Vector2d to Vector2.
+		/// </summary>
+		/// <param name="v">Vector2d.</param>
+		/// <returns>The Vector2.</returns>
+		public static Vector2 ToVector2(this Vector2d v)
+		{
+			return new Vector2((float)v.x, (float)v.y);
+		}
+
+		/// <summary>
 		/// Vector2d convenience method to convert Vector2d to Vector3.
 		/// </summary>
 		/// <returns>Vector3 with a y value of zero.</returns>
