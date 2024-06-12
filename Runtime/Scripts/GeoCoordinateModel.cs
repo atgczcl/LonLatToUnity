@@ -1,3 +1,4 @@
+using Mapbox.Unity.Utilities;
 using Mapbox.Utils;
 using System;
 using System.Collections;
@@ -28,7 +29,7 @@ namespace ATGC.GEO
         public double calc_distance;
         //计算单位向量
         public Vector2d calc_directionVector;
-        public Vector2d calc_unitVector;
+        public Vector2d calc_WebMercatorNormal;
         public Vector2d calc_unityPos;
 
         public string LonLatStr { get; }
@@ -80,14 +81,15 @@ namespace ATGC.GEO
         {
             //计算离中心点的距离
             calc_distance = Vector2d.Distance(WebMercatorPos, centerWebMercatorPos);
-            //计算单位向量
+            // 计算方向向量
             calc_directionVector = WebMercatorPos - centerWebMercatorPos;
-            calc_unitVector = calc_directionVector.normalized;
+            // 计算单位向量
+            calc_WebMercatorNormal = calc_directionVector.normalized;
 
         }
 
         /// <summary>
-        /// 计算缩放后的unity坐标
+        /// 计算缩放后的unity坐标，假设基准点的方向dir(0,0,0)和web mercator方向相同
         /// </summary>
         /// <param name="centerUnityPos"> 中心点的unity坐标 x,z水平坐标</param>
         /// <param name="scale"></param>
@@ -96,7 +98,20 @@ namespace ATGC.GEO
             //计算延长线上新点的位置
             if (scale == 0) return centerUnityPos;
             Vector2d centerWebMercatorPos = new Vector2d(centerUnityPos.x, centerUnityPos.y);
-            calc_unityPos = centerWebMercatorPos + (calc_unitVector * calc_distance / scale);
+            calc_unityPos = centerWebMercatorPos + (calc_WebMercatorNormal * calc_distance / scale);
+            return new Vector2((float)calc_unityPos.x, (float)calc_unityPos.y);
+        }
+
+        /// <summary>
+        /// 计算缩放后的unity坐标，假设基准点的方向dir(0,0,0)和web mercator方向相同
+        /// </summary>
+        /// <param name="centerUnityPos"> 中心点的unity坐标 x,z水平坐标</param>
+        /// <param name="scale"></param>
+        public Vector2 CalculateScaledUnityPos(Vector2d centerUnityPos, float scale)
+        {
+            //计算延长线上新点的位置
+            if (scale == 0) return new Vector2((float)centerUnityPos.x, (float)centerUnityPos.y);
+            calc_unityPos = centerUnityPos + (calc_WebMercatorNormal * calc_distance / scale);
             return new Vector2((float)calc_unityPos.x, (float)calc_unityPos.y);
         }
     }

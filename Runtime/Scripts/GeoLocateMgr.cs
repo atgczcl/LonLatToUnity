@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Mapbox.Utils;
 
 namespace ATGC.GEO
 {
@@ -52,7 +53,7 @@ namespace ATGC.GEO
                 obj.InitGeoCoordinateModel();
                 obj.m_GeoCoordinateModel.CalculateInfo(CenterLocaterObj.m_GeoCoordinateModel.WebMercatorPos);
                 //计算缩放后的unity坐标
-                Vector2 centerUnityPos = new Vector2(CenterLocaterObj.transform.position.x, CenterLocaterObj.transform.position.z);
+                Vector2d centerUnityPos = new (CenterLocaterObj.transform.position.x, CenterLocaterObj.transform.position.z);
                 var scaledUnityPos = obj.m_GeoCoordinateModel.CalculateScaledUnityPos(centerUnityPos, Scale);
                 obj.transform.position = new Vector3(scaledUnityPos.x, 0, scaledUnityPos.y);
             }
@@ -68,14 +69,11 @@ namespace ATGC.GEO
             //初始化GeoCoordinateModel
             GeoCoordinateModel geoCoordinateModel = new GeoCoordinateModel(lonLatStr);
             //中心点unity坐标
-            Vector2 centerUnityPos = new Vector2(CenterLocaterObj.transform.position.x, CenterLocaterObj.transform.position.z);
+            Vector2d centerUnityPos = new (CenterLocaterObj.transform.position.x, CenterLocaterObj.transform.position.z);
             //计算缩放后的unity坐标
             var scaledUnityPos = geoCoordinateModel.CalculateScaledUnityPos(centerUnityPos, Scale);
             return scaledUnityPos;
         }
-        
-
-
 
     }
 }
