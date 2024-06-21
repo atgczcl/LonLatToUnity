@@ -8,11 +8,18 @@ namespace ATGC.GEO
 {
     public class GeoUtils
     {
-        public const double OriginShift = 2 * Math.PI * 6378137 / 2.0; // 地球半径乘以π，用于Web墨卡托投影计算
         /// <summary>
-        /// 地球半径，单位：米
+        /// 地球半径乘以π，用于Web墨卡托投影计算
         /// </summary>
-        public const float EarthRadius = 6371000f; // 地球半径，单位：米
+        public const double OriginShift = 2 * Math.PI * EarthRadiusMean / 2.0;
+        /// <summary>
+        /// 地球平均半径，单位：米
+        /// </summary>
+        public const float EarthRadiusMean = 6371000f; // 地球半径，单位：米
+        /// <summary>
+        /// 地球赤道的半径，单位：米
+        /// </summary>
+        public const float EarthRadiusEquator = 6378137f; // 地球赤道的半径，单位：米
         /// <summary>
         /// 将经纬度坐标转换为Web墨卡托投影坐标
         /// </summary>
@@ -49,21 +56,22 @@ namespace ATGC.GEO
             return new Vector2d((posx - centerPoint.x) * scale, (posy - centerPoint.y) * scale);
         }
 
-        public Vector2 GetLatLongToWorld2D(double latitude, double longitude)
+        /// <summary>
+        /// 将经纬度坐标转换为Web墨卡托投影坐标
+        /// 注意：经纬度坐标和Web墨卡托投影坐标的坐标系不一样，Web墨卡托投影坐标的中心点在经线的正北方
+        /// </summary>
+        /// <summary>
+        /// 将Web墨卡托投影坐标转换为经纬度坐标
+        /// </summary>
+        /// <param name="x">Web墨卡托投影的X坐标</param>
+        /// <param name="y">Web墨卡托投影的Y坐标</param>
+        /// <returns>经纬度坐标</returns>
+        public static Vector2d WebMercatorToLonLat(double x, double y)
         {
-            // 将经纬度从度数转换为弧度
-            //float转换为double，避免精度丢失
-
-            double latRad = (Mathf.Deg2Rad * latitude);
-            double lonRad = (Mathf.Deg2Rad * longitude);
-
-            // 使用球坐标计算x, y, z值
-            double x = EarthRadius * Math.Cos(latRad) * Math.Cos(lonRad);
-            double y = EarthRadius * Math.Cos(latRad) * Math.Sin(lonRad);
-            double z = EarthRadius * Math.Sin(latRad);
-
-            return new Vector2((float)x, (float)z);
-            //return new Vector3((float)x, 0, (float)z);
+            double lon = (x / OriginShift) * 180.0;
+            // 反向转换纬度
+            double lat = (180 / Math.PI * (2 * Math.Atan(Math.Exp(y / OriginShift * Math.PI)) - Math.PI / 2));
+            return new Vector2d(lon, lat);
         }
     }
 }
