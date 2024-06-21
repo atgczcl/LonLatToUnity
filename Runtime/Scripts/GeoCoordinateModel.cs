@@ -26,13 +26,35 @@ namespace ATGC.GEO
         /// 墨卡托投影坐标
         /// </summary>
         public Vector2d WebMercatorPos;
-        public double calc_distance;
-        //计算单位向量
+        /// <summary>
+        /// 计算的web距离
+        /// </summary>
+        public double calc_web_distance;
+        /// <summary>
+        /// 计算单位向量
+        /// </summary>
         public Vector2d calc_directionVector;
+        /// <summary>
+        /// 计算的web经纬度
+        /// </summary>
         public Vector2d calc_WebMercatorNormal;
+        /// <summary>
+        /// 计算的unity坐标
+        /// </summary>
         public Vector2d calc_unityPos;
+        /// <summary>
+        /// unity的世界坐标
+        /// </summary>
+        public Vector2d unityPos_world;
+        /// <summary>
+        /// unity的本地坐标
+        /// </summary>
+        public Vector2d unityPos_local;
 
-        public string LonLatStr { get; }
+        public string LonLatStr;
+
+        public GeoCoordinateModel()
+        { }
 
         public GeoCoordinateModel(double lon, double lat)
         {
@@ -54,6 +76,24 @@ namespace ATGC.GEO
                     double.TryParse(strs[1], out latitude);
                 }
             }
+        }
+
+        /// <summary>
+        /// 设置世界unity坐标
+        /// </summary>
+        /// <param name="unityPos"></param>
+        public void SetWorldUnityPos(Vector2 unityPos)
+        {
+            unityPos_world = new Vector2d(unityPos.x, unityPos.y);
+        }
+        
+        /// <summary>
+        /// 设置本地unity坐标
+        /// </summary>
+        /// <param name="unityPos"></param>
+        public void SetLocalUnityPos(Vector2 unityPos)
+        {
+            unityPos_local = new Vector2d(unityPos.x, unityPos.y);
         }
 
         /// <summary>
@@ -80,7 +120,7 @@ namespace ATGC.GEO
         public void CalculateInfo(Vector2d centerWebMercatorPos)
         {
             //计算离中心点的距离
-            calc_distance = Vector2d.Distance(WebMercatorPos, centerWebMercatorPos);
+            calc_web_distance = Vector2d.Distance(WebMercatorPos, centerWebMercatorPos);
             // 计算方向向量
             calc_directionVector = WebMercatorPos - centerWebMercatorPos;
             // 计算单位向量
@@ -98,7 +138,7 @@ namespace ATGC.GEO
             //计算延长线上新点的位置
             if (scale == 0) return centerUnityPos;
             Vector2d centerWebMercatorPos = new Vector2d(centerUnityPos.x, centerUnityPos.y);
-            calc_unityPos = centerWebMercatorPos + (calc_WebMercatorNormal * calc_distance / scale);
+            calc_unityPos = centerWebMercatorPos + (calc_WebMercatorNormal * calc_web_distance / scale);
             return new Vector2((float)calc_unityPos.x, (float)calc_unityPos.y);
         }
 
@@ -111,8 +151,35 @@ namespace ATGC.GEO
         {
             //计算延长线上新点的位置
             if (scale == 0) return new Vector2((float)centerUnityPos.x, (float)centerUnityPos.y);
-            calc_unityPos = centerUnityPos + (calc_WebMercatorNormal * calc_distance / scale);
+            calc_unityPos = centerUnityPos + (calc_WebMercatorNormal * calc_web_distance / scale);
             return new Vector2((float)calc_unityPos.x, (float)calc_unityPos.y);
+        }
+
+        /// <summary>
+        /// 知道某个点的坐标，scale,中心点经纬度，计算出某个点经纬度
+        /// </summary>
+        /// <param name="centerUnityPos"></param>
+        /// <param name="scale"></param>
+        /// <param name="centerLonLat"></param>
+        /// <returns></returns>
+        public GeoCoordinateModel CalculateLonLat(Vector2d unityPos, GeoCoordinateModel centerLonLat, float scale)
+        {
+            //GeoCoordinateModel lonLat = new GeoCoordinateModel();
+            //计算离web unity中心点的距离
+            calc_web_distance = Vector2d.Distance(unityPos, centerLonLat.unityPos_world)*scale;
+            // 计算方向向量
+            calc_directionVector = unityPos - centerLonLat.unityPos_world;
+            // 计算单位向量
+            calc_WebMercatorNormal = calc_directionVector.normalized;
+            //计算web摩卡托坐标
+            WebMercatorPos = centerLonLat.WebMercatorPos + (calc_WebMercatorNormal * calc_web_distance);
+            //计算经纬度
+            calc_unityPos = unityPos;
+            Vector2d lonLatPos = GeoUtils.WebMercatorToLonLat(WebMercatorPos.x, WebMercatorPos.y);
+            longitude = lonLatPos.x;
+            latitude = lonLatPos.y;
+            LonLatStr = longitude.ToString() + "," + latitude.ToString();
+            return this;
         }
     }
 }

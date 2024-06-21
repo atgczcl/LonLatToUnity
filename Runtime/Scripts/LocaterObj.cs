@@ -44,6 +44,8 @@ namespace ATGC.GEO
                 }
             }
             m_GeoCoordinateModel = new GeoCoordinateModel(longitude, latitude);
+            m_GeoCoordinateModel.SetLocalUnityPos(transform.localPosition);
+            m_GeoCoordinateModel.SetWorldUnityPos(transform.position);
         }
 
 
