@@ -7,7 +7,8 @@
 namespace Mapbox.Unity.Utilities
 {
 	using Mapbox.Utils;
-	using UnityEngine;
+    using System;
+    using UnityEngine;
 
 	public static class VectorExtensions
 	{
@@ -151,5 +152,15 @@ namespace Mapbox.Unity.Utilities
 		{
 			return position.ToVector3xz().GetGeoPosition(refPoint, scale);
 		}
-	}
+
+        public static Vector3d ToVector3d(this Vector3 v)
+        {
+            return new Vector3d(v.x, v.y, v.z);
+        }
+
+        public static Vector3 ToVector3(this Vector3d v)
+        {
+            return new Vector3(Convert.ToSingle(v.x), Convert.ToSingle(v.y), Convert.ToSingle(v.z));
+        }
+    }
 }

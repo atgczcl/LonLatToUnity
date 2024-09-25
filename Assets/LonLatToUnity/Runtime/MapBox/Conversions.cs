@@ -442,5 +442,7 @@ namespace Mapbox.Unity.Utilities
 			double angle = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 			return angle * 6378.16;
 		}
-	}
+
+        
+    }
 }
